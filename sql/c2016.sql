@@ -34,7 +34,9 @@ INSERT INTO contact(name, sid, address, post_number, place, country, phone, emai
 CREATE TABLE vendor(
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   name VARCHAR(64) UNIQUE NOT NULL,
-  contact_id INTEGER NOT NULL
+  contact_id INTEGER NOT NULL,
+  
+  FOREIGN KEY (contact_id) REFERENCES contact(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 INSERT INTO vendor(name, contact_id) VALUES ('Fisher Chemical', 2);
@@ -64,18 +66,25 @@ CREATE TABLE resource(
   name VARCHAR(256) NOT NULL,
   second_name TEXT NULL,
   resource_category_id INTEGER NULL,
+  vendor_id INTEGER NOT NULL,
   vender_product_number VARCHAR(128) NULL,
   quantity REAL NULL,
   measure_id INTEGER NULL,
   price REAL NULL,
-  currency CHAR(3) NULL
+  currency CHAR(3) NULL,
+  
+  FOREIGN KEY (resource_category_id) REFERENCES resource_category(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (vendor_id) REFERENCES vendor(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (measure_id) REFERENCES resource_measure(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE purchase_order(
   id INTEGER UNIQUE PRIMARY KEY NOT NULL,
   date CHAR(10) NOT NULL,
   vendor_id INTEGER NOT NULL,
-  ship_to_contact_id INTEGER NOT NULL
+  ship_to_contact_id INTEGER NOT NULL,
+  
+  FOREIGN KEY (vendor_id) REFERENCES vendor(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE purchase_order_item(
@@ -84,5 +93,18 @@ CREATE TABLE purchase_order_item(
   resource_id INTEGER NOT NULL,
   description VARCHAR(256) NULL,
   quantity REAL NOT NULL,
-  unit_price REAL NOT NULL
+  unit_price REAL NOT NULL,
+  
+  FOREIGN KEY (purchase_order_id) REFERENCES purchase_order(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (resource_id) REFERENCES resource(id) ON UPDATE CASCADE ON DELETE CASCADE,
 );
+
+CREATE VIEW IF NOT EXISTS resource_report AS SELECT
+  id,
+  name,
+  second_name,
+  resource_category_id,
+  resource_category.category AS category
+  FROM resource
+  INNER JOIN resource_category ON
+    resource.resource_category_id = resource_category.id;
