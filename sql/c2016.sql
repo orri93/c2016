@@ -8,7 +8,7 @@ CREATE TABLE contact(
   country VARCHAR(128) NULL,
   phone VARCHAR(64) NULL,
   email VARCHAR(128) NULL
-)
+);
 
 INSERT INTO contact(name, sid, address, post_number, place, country, phone, email) VALUES(
   'Sagos slf.',
@@ -37,8 +37,8 @@ CREATE TABLE vendor(
   contact_id INTEGER NOT NULL
 );
 
-INSERT INTO vendor(name) VALUES ('Fisher Chemical');
-INSERT INTO vendor(name) VALUES ('Acros Organics');
+INSERT INTO vendor(name, contact_id) VALUES ('Fisher Chemical', 2);
+INSERT INTO vendor(name, contact_id) VALUES ('Acros Organics', 2);
 
 CREATE TABLE resource_category (
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
