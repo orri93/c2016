@@ -52,15 +52,6 @@ INSERT INTO resource_category(category) VALUES ('Acid');
 INSERT INTO resource_category(category) VALUES ('Salt');
 INSERT INTO resource_category(category) VALUES ('Solvent');
 
-CREATE TABLE resource_measure(
-  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  measure VARCHAR(32) UNIQUE NOT NULL
-);
-
-INSERT INTO resource_measure(measure) VALUES ('mL');
-INSERT INTO resource_measure(measure) VALUES ('L');
-INSERT INTO resource_measure(measure) VALUES ('kg');
-
 CREATE TABLE resource(
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   name VARCHAR(256) NOT NULL,
@@ -69,13 +60,12 @@ CREATE TABLE resource(
   vendor_id INTEGER NOT NULL,
   vender_product_number VARCHAR(128) NULL,
   quantity REAL NULL,
-  measure_id INTEGER NULL,
+  measure VARCHAR(32) NULL,
   price REAL NULL,
   currency CHAR(3) NULL,
   
   FOREIGN KEY (resource_category_id) REFERENCES resource_category(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (vendor_id) REFERENCES vendor(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (measure_id) REFERENCES resource_measure(id) ON UPDATE CASCADE ON DELETE CASCADE
+  FOREIGN KEY (vendor_id) REFERENCES vendor(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE purchase_order(
@@ -109,7 +99,7 @@ CREATE VIEW IF NOT EXISTS resource_report AS SELECT
   vendor.name AS vendor_name,
   resource.vender_product_number,
   resource.quantity,
-  resource.measure_id,
+  resource.measure,
   resource.price,
   resource.currency
   FROM resource
