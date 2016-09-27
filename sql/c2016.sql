@@ -96,15 +96,24 @@ CREATE TABLE purchase_order_item(
   unit_price REAL NOT NULL,
   
   FOREIGN KEY (purchase_order_id) REFERENCES purchase_order(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (resource_id) REFERENCES resource(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (resource_id) REFERENCES resource(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE VIEW IF NOT EXISTS resource_report AS SELECT
-  id,
-  name,
-  second_name,
-  resource_category_id,
-  resource_category.category AS category
+  resource.id,
+  resource.name,
+  resource.second_name,
+  resource.resource_category_id,
+  resource_category.category AS category,
+  resource.vendor_id,
+  vendor.name AS vendor_name,
+  resource.vender_product_number,
+  resource.quantity,
+  resource.measure_id,
+  resource.price,
+  resource.currency
   FROM resource
   INNER JOIN resource_category ON
-    resource.resource_category_id = resource_category.id;
+    resource.resource_category_id = resource_category.id
+  INNER JOIN vendor ON
+    resource.vendor_id = vendor.id;
