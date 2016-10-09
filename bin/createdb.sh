@@ -8,5 +8,5 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-cat "${DIR}/../sql/c2016.sql" | sqlite3 "${DIR}/../db/c2016.db"
-
+cat "${DIR}/../sql/c2016-tables.sql" | sqlite3 "${DIR}/../db/c2016.db"
+cat "${DIR}/../sql/c2016-views.sql" | sqlite3 "${DIR}/../db/c2016.db"
